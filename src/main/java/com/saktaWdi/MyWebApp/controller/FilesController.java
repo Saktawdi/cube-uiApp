@@ -22,7 +22,10 @@ import java.util.UUID;
 public class FilesController {
 
     @PostMapping("avatar")
-    public CommonResult uploadImg(@RequestParam(value="files")MultipartFile [] files) throws Exception{
+    public CommonResult uploadImg(@RequestParam(value="files",required = false)MultipartFile [] files) throws Exception{
+        if(files==null){
+            return CommonResult.fail("","");
+        }
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
             String fileType = file.getContentType();

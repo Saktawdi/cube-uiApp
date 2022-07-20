@@ -16,12 +16,12 @@ import java.util.Date;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String accesToken=request.getHeader("token");
-        if (accesToken==null){
-            accesToken=request.getParameter("token");
+        String accessToken=request.getHeader("token");
+        if (accessToken==null){
+            accessToken=request.getParameter("token");
         }
-        if (StringUtils.isNotBlank(accesToken)){
-            Claims claims= JWTUtil.checkJWT(accesToken);
+        if (StringUtils.isNotBlank(accessToken)){
+            Claims claims= JWTUtil.checkJWT(accessToken);
             if (claims==null){
                 //登录过期
                 sendJsonMsg(response, CommonResult.fail("-2","登录已过期，请重新登录"));
@@ -49,6 +49,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 
     private static void sendJsonMsg(HttpServletResponse response,Object object) {
+        responseSendJsonMsg(response, object);
+    }
+
+    static void responseSendJsonMsg(HttpServletResponse response, Object object) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             response.setContentType("application/json;charset=utf-8");
@@ -61,6 +65,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             e.printStackTrace();
         }
     }
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);

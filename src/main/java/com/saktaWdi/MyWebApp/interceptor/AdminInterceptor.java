@@ -41,17 +41,7 @@ public class AdminInterceptor implements HandlerInterceptor {
     }
 
     private static void sendJsonMsg(HttpServletResponse response,Object object) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            response.setContentType("application/json;charset=utf-8");
-            PrintWriter writer = response.getWriter();
-            writer.print(objectMapper.writer().writeValueAsString(object));
-            writer.close();
-            response.flushBuffer();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LoginInterceptor.responseSendJsonMsg(response, object);
     }
 
     @Override
