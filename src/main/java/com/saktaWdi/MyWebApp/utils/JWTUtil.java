@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class JWTUtil {
@@ -27,13 +28,15 @@ public class JWTUtil {
     private  static final String SUBJECT="cnwdi:666";
 
     public static String getJsonToken(Users user){
+        SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
+        String dateStr = formatter.format(user.getCreateTime());
         String token= Jwts.builder().setSubject(SUBJECT)
                 .claim("id",user.getId()+190306)
                 .claim("num",user.getNum())
                 .claim("vip",user.getVip())
                 .claim("name",user.getName())
                 .claim("avatarUrl",user.getAvatarUrl())
-                .claim("createTime",user.getCreateTime())
+                .claim("createTime",dateStr)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+EXPIRE))
                 .signWith(SignatureAlgorithm.HS256,SECRET_KEY).compact();

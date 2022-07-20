@@ -44,8 +44,8 @@ public class FilesController {
             String resourcesRootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
             String code = UUID.randomUUID().toString().replaceAll("-", "");
             String newFileName = code + fileName.substring(fileName.lastIndexOf('.'));
-            String destFilePath = "public/userFiles/newUsers/"+newFileName;
-            String savePath=resourcesRootPath+destFilePath;
+            String destFilePath = "userFiles/newUsers/"+newFileName;
+            String savePath=resourcesRootPath+"public/"+destFilePath;
             if(FilesUtils.base64StrToImage(imgCompress,savePath)){
                 return CommonResult.ok().setResult(destFilePath);
             }else{

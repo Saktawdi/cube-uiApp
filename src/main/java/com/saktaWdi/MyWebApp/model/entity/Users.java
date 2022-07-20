@@ -1,6 +1,7 @@
 package com.saktaWdi.MyWebApp.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.ToString;
@@ -17,5 +18,6 @@ public class Users {
     private String name;
     private String avatarUrl;
     private int vip;
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
     private Date createTime;
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -61,4 +63,23 @@ public class UsersController {
         }
     }
 
+    @GetMapping("userInfo")
+    public CommonResult getUserInfo(HttpServletRequest httpServletRequest){
+        Users user=new Users();
+        user.setId((Integer) httpServletRequest.getAttribute("user_id"));
+        user.setName((String) httpServletRequest.getAttribute("user_name"));
+        user.setNum((Integer) httpServletRequest.getAttribute("user_num"));
+        user.setVip((Integer) httpServletRequest.getAttribute("user_vip"));
+        user.setAvatarUrl((String) httpServletRequest.getAttribute("user_avatar_url"));
+        SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
+        String s = httpServletRequest.getAttribute("user_create_time").toString();
+        Date date = null;
+        try {
+            date = formatter.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setCreateTime(date);
+        return CommonResult.ok().setResult(user);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.Date;
 
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
@@ -30,9 +31,9 @@ public class LoginInterceptor implements HandlerInterceptor {
             Integer userId=(Integer) claims.get("id");
             String userName=(String) claims.get("name");;
             Integer userVip=(Integer) claims.get("vip");
-            String userNum=(String) claims.get("num");
+            Integer userNum=(Integer) claims.get("num");
             String userAvatarUrl=(String) claims.get("avatarUrl");
-            String userCreateTime=(String) claims.get("createTime");
+            String userCreateTime= (String)claims.get("createTime");
 
             request.setAttribute("user_id",userId);
             request.setAttribute("user_name",userName);
@@ -42,7 +43,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             request.setAttribute("user_create_time",userCreateTime);
             return true;
         }
-        sendJsonMsg(response, CommonResult.fail("-1","登录身份出错"));
+        sendJsonMsg(response, CommonResult.fail("-1","token为空"));
         return false;
     }
 
