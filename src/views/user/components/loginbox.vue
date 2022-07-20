@@ -11,8 +11,8 @@
       <cube-form-group>
         <cube-button type="submit">登录</cube-button>
       </cube-form-group>
-
     </cube-form>
+        <cube-button class="registerBtn" :outline="true" @click="ToRegister">注册</cube-button>
   </div>
 </template>
 
@@ -30,15 +30,15 @@ export default {
       fields: [{
         type: "input",
         modelKey: "numValue",
-        label: "学号/职工号",
+        label: "账号",
         props: {
-          placeholder: "请输入学号/职工号"
+          placeholder: "请输入账号"
         },
         rules: {
           required: true
         },
         messages: {
-          required: "学号/职工号不能为空"
+          required: "账号不能为空"
         }
       },
       {
@@ -72,7 +72,8 @@ export default {
             localStorage.setItem('token', res.data.data)
             this.$store.dispatch('setToken')
 
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/userInfo' })
+            location.reload();
           } else {
             const toast = this.$createToast({
               txt: "登录失败",
@@ -83,6 +84,9 @@ export default {
           }
         }
       )
+    },
+    ToRegister() {
+      this.$router.push("/register");
     }
   }
 }

@@ -3,7 +3,7 @@
         <div class="container">
             <div class="p_top">
                 <div>
-                    <img :src='info.head_img || defaultHeadImg' alt="头像" />
+                    <img :src='info.avatarUrl || defaultHeadImg' alt="头像" />
                     <router-link to="/login" v-if="getToken === ''">
                         <p>立即登录</p>
                     </router-link>
@@ -14,22 +14,83 @@
                 退出登录
             </button>
         </div>
+        <div class="mainInfo">
+            <user-msg-list></user-msg-list>
+        </div>
         <common-footer-vue></common-footer-vue>
     </div>
 </template>
 
 <script>
 import CommonFooterVue from '@/components/CommonFooter.vue'
+import userMsgList from './components/userMsgList.vue'
 import defaultHeadImg from "@/assets/logo.png";
+import { getUserInfoApi } from "@/api/getData";
+import { requestConfig } from '@/request';
+import UserMsgList from './components/userMsgList.vue';
 
 export default {
     components: {
-        CommonFooterVue
-    },
+    CommonFooterVue,
+    userMsgList,
+    UserMsgList
+},
     data() {
         return {
-            info: { name: "sakta" },
-            defaultHeadImg: defaultHeadImg
+            info: {},
+            defaultHeadImg: defaultHeadImg,
+            swipeData: [{
+                item: {
+                    text: '测试1',
+                    value: 1
+                },
+                btns: [
+                    {
+                        action: 'clear',
+                        text: '不再关注',
+                        color: '#c8c7cd'
+                    },
+                    {
+                        action: 'delete',
+                        text: '删除',
+                        color: '#ff3a32'
+                    }
+                ]
+            }, {
+                item: {
+                    text: '测试2',
+                    value: 2
+                },
+                btns: [
+                    {
+                        action: 'clear',
+                        text: '不再关注',
+                        color: '#c8c7cd'
+                    },
+                    {
+                        action: 'delete',
+                        text: '删除',
+                        color: '#ff3a32'
+                    }
+                ]
+            }, {
+                item: {
+                    text: '测试3',
+                    value: 3
+                },
+                btns: [
+                    {
+                        action: 'clear',
+                        text: '不再关注',
+                        color: '#c8c7cd'
+                    },
+                    {
+                        action: 'delete',
+                        text: '删除',
+                        color: '#ff3a32'
+                    }
+                ]
+            }]
         };
     },
     computed: {
@@ -43,6 +104,23 @@ export default {
             localStorage.removeItem('token');
             //刷新页面
             location.reload();
+        },
+        async getUserInfo() {
+            try {
+                const result = await getUserInfoApi(this.getToken)
+                if (result.data.success === true) {
+                    this.info = result.data.data;
+                    this.info.avatarUrl = requestConfig.baseURL + this.info.avatarUrl;
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+    },
+    mounted() {
+        if (this.getToken) {
+            this.getUserInfo(this.$store.state.token);
         }
     }
 }
@@ -59,7 +137,7 @@ export default {
         align-items: center;
         padding: 20px 0;
         background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-        background-size:600% 600%;
+        background-size: 600% 600%;
         animation: gradientBG 5s ease infinite;
 
 

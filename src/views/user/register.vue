@@ -20,6 +20,7 @@
                 <cube-button type="submit"  :disabled=ifDisabled>注册</cube-button>
             </cube-form-group>
         </cube-form>
+        <cube-button class="loginBtn" :outline="true" @click="ToLogin">登录</cube-button>
     </div>
 
 </template>
@@ -187,9 +188,20 @@ export default {
                 time: 1000
             }).show();
         },
+        ToLogin(){
+            this.$router.push("/login");
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+.main{
+    margin-top: -10px;
+     padding: 45px 5% 0;
+  text-align: center;
+}
+.loginBtn{
+    margin-top:10px;
+}
 </style>
