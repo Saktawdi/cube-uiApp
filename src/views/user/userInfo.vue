@@ -10,12 +10,17 @@
                     <p v-else>{{ info.name }} </p>
                 </div>
             </div>
-            <button v-if="getToken !== ''" class="green" @click="signOut">
-                退出登录
-            </button>
         </div>
-        <div class="mainInfo">
-            <user-msg-list></user-msg-list>
+        <div class="mainInfo" v-if="getToken === ''">
+            <user-msg-list :swipeData="swipeData" hidden></user-msg-list>
+        </div>
+        <div class="mainInfo" v-else>
+            <user-msg-list :swipeData="swipeData"></user-msg-list>
+        </div>
+        <div>
+            <button v-if="getToken !== ''" class="green" @click="signOut">
+            退出登录
+            </button>
         </div>
         <common-footer-vue></common-footer-vue>
     </div>
@@ -27,13 +32,11 @@ import userMsgList from './components/userMsgList.vue'
 import defaultHeadImg from "@/assets/logo.png";
 import { getUserInfoApi } from "@/api/getData";
 import { requestConfig } from '@/request';
-import UserMsgList from './components/userMsgList.vue';
 
 export default {
     components: {
     CommonFooterVue,
     userMsgList,
-    UserMsgList
 },
     data() {
         return {
@@ -41,55 +44,26 @@ export default {
             defaultHeadImg: defaultHeadImg,
             swipeData: [{
                 item: {
-                    text: '测试1',
-                    value: 1
+                    text: 'id：',
+                    value: 1,
+                },
+            }, {
+                item: {
+                    text: 'VIP：',
+                    value: 2,
                 },
                 btns: [
                     {
-                        action: 'clear',
-                        text: '不再关注',
-                        color: '#c8c7cd'
-                    },
-                    {
-                        action: 'delete',
-                        text: '删除',
-                        color: '#ff3a32'
+                        action: 'upVip',
+                        text: '升级',
+                        color: '#00FF7F'
                     }
                 ]
             }, {
                 item: {
-                    text: '测试2',
-                    value: 2
-                },
-                btns: [
-                    {
-                        action: 'clear',
-                        text: '不再关注',
-                        color: '#c8c7cd'
-                    },
-                    {
-                        action: 'delete',
-                        text: '删除',
-                        color: '#ff3a32'
-                    }
-                ]
-            }, {
-                item: {
-                    text: '测试3',
+                    text: '注册时间：',
                     value: 3
                 },
-                btns: [
-                    {
-                        action: 'clear',
-                        text: '不再关注',
-                        color: '#c8c7cd'
-                    },
-                    {
-                        action: 'delete',
-                        text: '删除',
-                        color: '#ff3a32'
-                    }
-                ]
             }]
         };
     },
@@ -110,7 +84,14 @@ export default {
                 const result = await getUserInfoApi(this.getToken)
                 if (result.data.success === true) {
                     this.info = result.data.data;
-                    this.info.avatarUrl = requestConfig.baseURL + this.info.avatarUrl;
+                    if (this.info.avatarUrl != "") {
+                        this.info.avatarUrl = requestConfig.baseURL + this.info.avatarUrl;
+                    } else {
+                        this.info.avatarUrl = requestConfig.baseURL + "defaultFile/default0.png"
+                    }
+                    this.swipeData[0].item.text+=this.info.id;
+                    this.swipeData[1].item.text+=this.info.vip;
+                    this.swipeData[2].item.text+=this.info.createTime;
                 }
             } catch (error) {
                 console.log(error)

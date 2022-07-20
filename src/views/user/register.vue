@@ -137,8 +137,8 @@ export default {
         },
         async uploadImgAndRegister(model) {
             try {
-                if (model.uploadValue === null) {
-                    model.uploadValue = "public/defaultFile/default0.png";
+                if (model.uploadValue.length === 0) { 
+                    model.uploadValue = "defaultFile/default"+parseInt(Math.random()*8)+".png";
                 } else {
                     const uploadResult = await uploadImgApi(this.fileList);
                     const toast = this.$createToast({

@@ -22,6 +22,8 @@ export const getUserInfoApi = (token) => axios.get("api/v1/pri/user/userInfo",{
     }
 })
 
+//获取轮播图数据
+export const getBannerApi = () => axios.get("api/v1/pub/banner/list")
 
 // //查看所有报销单接口
 // export const allRequestApi = (token) => axios.post("/api/v1/pri/user/find_allRequests", {}, {
