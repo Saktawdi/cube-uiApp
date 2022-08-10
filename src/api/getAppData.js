@@ -7,8 +7,8 @@ const appListData = [
                 "icon":"cubeic-smile"
             },
             {
-                "name": "医院报销系统",
-                "value": "/requestList",
+                "name": "游戏key系统",
+                "value": "/gameKeySys",
                 "icon":"cubeic-add"
             },
         ]
@@ -23,8 +23,8 @@ const appListData = [
     {
         "name": "Y",
         "items": [{
-            "name": "医院报销系统",
-            "value": "/requestList"
+            "name": "游戏key系统",
+            "value": "/gameKeySys"
         }, ]
     },
 ]
