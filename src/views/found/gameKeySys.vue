@@ -2,13 +2,13 @@
     <div>
         <CommonHearder :Info="title"></CommonHearder>
         <div class="gradient-border" id="box">
-            <button class="button">
+            <button class="button" v-on:click="addGame">
                 添加    游戏
                 <div class="button__horizontal"></div>
                 <div class="button__vertical"></div>
             </button>
         </div>
-        <key-list></key-list>
+        <key-list :swipeData="swipeData"></key-list>
     </div>
 </template>
 
@@ -24,9 +24,76 @@ export default {
     },
     data() {
         return {
-            title: "返回主页"
+            title: "返回主页",
+            swipeData: [
+            ]
         }
-    }
+    },
+    methods: {
+        addGame() {
+            if(!this.getToken){
+                this.showErrorTips("您还没有登录呢，去主页登录再来吧！")
+                return
+            }
+            this.dialog = this.$createDialog({
+                type: 'prompt',
+                title: '新增游戏标题',
+                $class: {
+                    'my_class': true,
+                },
+                prompt: {
+                    value: '',
+                    placeholder: '请输入'
+                },
+                onConfirm: (e, promptValue) => {
+                    if (promptValue === "") {
+                        this.showErrorTips("标题不能为空哦~")
+                    }else {
+                        for (let index = 0; index < this.swipeData.length; index++) {
+                            if(promptValue===this.swipeData[index].item.text){
+                                this.showErrorTips("该游戏标题已存在!")
+                                return
+                            }
+                            
+                        }
+                        const newData=[{
+                            item: {
+                                text: promptValue,
+                                value: this.swipeData.length+1
+                            },
+                            btns:[
+                                {
+                                    action: 'editor',
+                                    text: '管理',
+                                    color: '#4EEE94'
+                                },
+                                {
+                                    action: 'delete',
+                                    text: '删除',
+                                    color: '#ff3a32'
+                                }
+                            ],
+                        }]
+                        this.swipeData=this.swipeData.concat(newData)
+
+                    }
+
+                }
+            }).show()
+        },
+        showErrorTips(text){
+            this.$createToast({
+                type: 'warn',
+                time: 1000,
+                txt: text
+            }).show()
+        }
+    },
+    computed: {
+        getToken() {
+            return this.$store.state.token;
+        }
+    },
 }
 </script>
 

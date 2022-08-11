@@ -5,14 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token:localStorage.getItem('token')||""
+    token:localStorage.getItem('token')||"",
+    userInfo:localStorage.getItem('userInfo')||"",
   },
   getters: {
+
   },
   //同步修改state里面的值
   mutations: {
     SET_TOKEN:(state,token)=>{
       state.token=token
+    },
+    SET_USERINFO:(state,userInfo)=>{
+      state.userInfo=userInfo
     }
   },
   //异步调用mutations里面的方法
@@ -24,6 +29,12 @@ export default new Vuex.Store({
     },
     clearToken(context){
       context.commit("SET_TOKEN","")
+    },
+    setUserInfo(context,userInfo){
+      context.commit("SET_USERINFO",userInfo)
+    },
+    clearUserInfo(context){
+      context.commit("SET_USERINFO","")
     }
   },
   modules: {

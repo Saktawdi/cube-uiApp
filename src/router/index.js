@@ -6,6 +6,7 @@ import Home from "../views/home/home.vue";
 import Found from "../views/found/found.vue";
 import UserInfo from "../views/user/userInfo.vue";
 import GameKeySys from "@/views/found/gameKeySys.vue"
+import EditorKey from "@/views/found/editorKey.vue"
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [{
     name: "GameKeySys",
     component: GameKeySys
   },
+  {
+    path:"/editorKey",
+    name:"EditorKey",
+    component:EditorKey
+  }
 ]
 
 const router = new VueRouter({

@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="mainInfo" v-if="getToken === ''">
-            <user-msg-list :swipeData="swipeData" hidden></user-msg-list>
+            <!-- <user-msg-list :swipeData="swipeData" hidden></user-msg-list> -->
         </div>
         <div class="mainInfo" v-else>
             <user-msg-list :swipeData="swipeData"></user-msg-list>
@@ -70,12 +70,17 @@ export default {
     computed: {
         getToken() {
             return this.$store.state.token;
+        },
+        getUserData(){
+            return this.$store.state.userInfo;
         }
     },
     methods: {
         async signOut() {
             await this.$store.dispatch('clearToken');
             localStorage.removeItem('token');
+            await this.$store.dispatch("clearUserInfo");
+            localStorage.removeItem('userInfo');
             //刷新页面
             location.reload();
         },
@@ -87,21 +92,30 @@ export default {
                     if (this.info.avatarUrl != "") {
                         this.info.avatarUrl = requestConfig.baseURL + this.info.avatarUrl;
                     } else {
-                        this.info.avatarUrl = requestConfig.baseURL + "defaultFile/default0.png"
+                        this.info.avatarUrl = requestConfig.baseURL + "defaultFile/default0.png";
                     }
-                    this.swipeData[0].item.text+=this.info.id;
-                    this.swipeData[1].item.text+=this.info.vip;
-                    this.swipeData[2].item.text+=this.info.createTime;
+                    this.updateSwipeData();
+                    localStorage.setItem("userInfo", JSON.stringify(this.info));
+                    this.$store.dispatch("setUserInfo")
                 }
             } catch (error) {
                 console.log(error)
             }
-
+        },
+        updateSwipeData(){
+            this.swipeData[0].item.text += this.info.id;
+            this.swipeData[1].item.text += this.info.vip;
+            this.swipeData[2].item.text += this.info.createTime;
         }
     },
     mounted() {
         if (this.getToken) {
-            this.getUserInfo(this.$store.state.token);
+            if(!this.getUserData){
+                this.getUserInfo(this.$store.state.token);
+            }else{
+                this.info = JSON.parse(this.$store.state.userInfo);
+                this.updateSwipeData();
+            }
         }
     }
 }

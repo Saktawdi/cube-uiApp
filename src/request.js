@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const requestConfig={
-    baseURL:"http://localhost:8089/",
+    baseURL:"http://localhost:8088/",
     timeout:5000
 }
 
