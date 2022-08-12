@@ -9,7 +9,10 @@ export default new Vuex.Store({
     userInfo:localStorage.getItem('userInfo')||"",
   },
   getters: {
-
+    getUserInfo(state){
+      state.userInfo=localStorage.getItem('userInfo');
+      return  state.userInfo;
+    }
   },
   //同步修改state里面的值
   mutations: {

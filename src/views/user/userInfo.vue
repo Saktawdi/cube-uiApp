@@ -72,7 +72,7 @@ export default {
             return this.$store.state.token;
         },
         getUserData(){
-            return this.$store.state.userInfo;
+            return this.$store.getters.getUserInfo;
         }
     },
     methods: {
@@ -95,7 +95,8 @@ export default {
                         this.info.avatarUrl = requestConfig.baseURL + "defaultFile/default0.png";
                     }
                     this.updateSwipeData();
-                    localStorage.setItem("userInfo", JSON.stringify(this.info));
+                    let userInfoStr=JSON.stringify(this.info)
+                    localStorage.setItem("userInfo",userInfoStr);
                     this.$store.dispatch("setUserInfo")
                 }
             } catch (error) {
@@ -110,10 +111,12 @@ export default {
     },
     mounted() {
         if (this.getToken) {
-            if(!this.getUserData){
+            if (!this.getUserData) {
+                console.log("no cache")
                 this.getUserInfo(this.$store.state.token);
             }else{
-                this.info = JSON.parse(this.$store.state.userInfo);
+                console.log("cache")
+                this.info = JSON.parse(this.getUserData);
                 this.updateSwipeData();
             }
         }

@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onItemClick(item) {
-      console.log('click item:', item)
+      console.log('click item:', item.value)
     },
     onBtnClick(btn, index) {
       if (btn.action === 'delete') {
@@ -38,9 +38,8 @@ export default {
           ],
           onSelect: () => {
             this.swipeData.splice(index, 1)
-            //TODO:删除Key的api
 
-
+            this.$emit("deleteGamesData",index)
           }
         }).show()
       }else if(btn.action==='editor'){
@@ -71,7 +70,7 @@ export default {
 }
 
 .container {
-  height: calc(100vh - 197px);
+  min-height: calc(100vh - 197px);
   padding-top: 20px;
   padding-bottom: 20px;
   background-color: #111845;
@@ -103,7 +102,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   width: calc(80vw);
-  height: calc(60vh);
+  min-height: calc(70vh);
   background: #111845a6;
   box-sizing: border-box;
   overflow: hidden;

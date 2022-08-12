@@ -11,6 +11,7 @@ export function create(Component, props) {
     }).$mount()
     let htmlObj = document.getElementById("builderBox")
     htmlObj.appendChild(comp.$el)
+    
     //  document.body.appendChild(comp.$el)
     comp.remove = () => {
         // document.body.removeChild(comp.$el)

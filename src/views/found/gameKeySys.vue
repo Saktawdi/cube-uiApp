@@ -7,34 +7,69 @@
                 <div class="button__horizontal"></div>
                 <div class="button__vertical"></div>
             </button>
+             <button class="button" v-on:click="saveGame">
+                保存    到云
+                <div class="button__horizontal"></div>
+                <div class="button__vertical"></div>
+            </button>
         </div>
-        <key-list :swipeData="swipeData"></key-list>
+        <key-list :swipeData="swipeData" @deleteGamesData="deleteGamesData"></key-list>
     </div>
 </template>
 
 <script>
 import CommonHearder from '@/components/CommonHearder.vue';
 import keyList from './components/keyList.vue';
-
+import {addGamesApi,getGamesApi} from "@/api/getData"
+const gamesJson=[];
+gamesJson.games=[];
+let count = 0;
 export default {
     components: {
         CommonHearder,
         keyList,
-
     },
     data() {
         return {
             title: "返回主页",
-            swipeData: [
-            ]
+            swipeData: [],
+            postJson:"",
+            ifUsed:false
         }
     },
     methods: {
+        async getGames(userNum){
+            try {
+                userNum=JSON.parse(userNum).num;
+                const result=await getGamesApi(userNum,this.getToken)
+                if (result.data.success===true) {
+                    let onlineData=[];
+                    onlineData=JSON.parse(result.data.data);
+                    for (let index = 0; index < onlineData.length; index++) {
+                        let newData=this.newSwipeTemp(onlineData[index].name);
+                        this.swipeData = this.swipeData.concat(newData);
+                    }
+                    gamesJson.games=onlineData;
+                    this.ifUsed=true;
+                    this.reLoadPostJson(userNum);
+                }else if(result.data.data==="无数据"){
+                    this.ifUsed=false;
+                }
+            } catch (error) {
+                console.log(error)
+                this.showErrorTips(error)
+            }
+        },
         addGame() {
             if(!this.getToken){
                 this.showErrorTips("您还没有登录呢，去主页登录再来吧！")
                 return
             }
+            if(!this.getUserInfo){
+                this.showErrorTips("获取用户信息失败")
+                return
+            }
+            var user_num=JSON.parse(this.getUserInfo).num;
             this.dialog = this.$createDialog({
                 type: 'prompt',
                 title: '新增游戏标题',
@@ -54,32 +89,41 @@ export default {
                                 this.showErrorTips("该游戏标题已存在!")
                                 return
                             }
-                            
                         }
-                        const newData=[{
-                            item: {
-                                text: promptValue,
-                                value: this.swipeData.length+1
-                            },
-                            btns:[
-                                {
-                                    action: 'editor',
-                                    text: '管理',
-                                    color: '#4EEE94'
-                                },
-                                {
-                                    action: 'delete',
-                                    text: '删除',
-                                    color: '#ff3a32'
-                                }
-                            ],
-                        }]
-                        this.swipeData=this.swipeData.concat(newData)
-
+                        let newData=this.newSwipeTemp(promptValue);
+                        gamesJson.games.push({
+                            "name":promptValue
+                        });
+                        this.reLoadPostJson(user_num)
+                        this.swipeData = this.swipeData.concat(newData)
                     }
-
                 }
             }).show()
+        },
+        saveGame(){
+            if(gamesJson.games.length===0 && this.ifUsed===false){
+                this.showErrorTips("还没有数据呢~不用保存哦")
+                return
+            }
+            try {
+                addGamesApi(this.postJson, this.getToken).then(res => {
+                    if (res.data.success === true) {
+                         this.showErrorTips(res.data.data)
+                    } else {
+                        gamesJson.games = [];
+                        this.showErrorTips(res.data.message)
+                    }
+                })
+            } catch (error) {
+                gamesJson.games = [];
+                this.showErrorTips(error)
+                console.log(error)
+            }          
+        },
+        deleteGamesData(deleteIndex){
+            gamesJson.games.splice(deleteIndex,1);
+            var userNum=JSON.parse(this.getUserInfo).num
+            this.reLoadPostJson(userNum)
         },
         showErrorTips(text){
             this.$createToast({
@@ -87,13 +131,48 @@ export default {
                 time: 1000,
                 txt: text
             }).show()
+        },
+        newSwipeTemp(value){
+            if (this.swipeData.length > 0) {
+                count = this.swipeData[this.swipeData.length - 1].item.value + 1;
+            }
+            const newData = [{
+                item: {
+                    text: value,
+                    value: count
+                },
+                btns: [
+                    {
+                        action: 'editor',
+                        text: '管理',
+                        color: '#4EEE94'
+                    },
+                    {
+                        action: 'delete',
+                        text: '删除',
+                        color: '#ff3a32'
+                    }
+                ],
+            }]
+            return newData;
+        },
+        reLoadPostJson(userNum){
+            this.postJson="{"+"\"user_num\""+":"+userNum+","
+                                    +"\"games\""+":"+JSON.stringify(gamesJson.games)+"}"
         }
     },
     computed: {
-        getToken() {
-            return this.$store.state.token;
+        getToken(){
+             return this.$store.state.token;
+        },
+        getUserInfo(){
+            return this.$store.state.userInfo;
         }
     },
+    mounted(){
+        //渲染完后拿数据
+        this.getGames(this.getUserInfo)
+    }
 }
 </script>
 
@@ -160,11 +239,11 @@ body {
 }
 
 .button {
-    --offset: 10px;
+    margin-left: 25px;
+    --offset: 8px;
     --border-size: 2px;
-    display: block;
     position: relative;
-    padding: 1.5em 3em;
+    padding: 1em 2.5em;
     appearance: none;
     border: 0;
     background: transparent;

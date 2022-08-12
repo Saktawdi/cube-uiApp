@@ -78,7 +78,8 @@ export default {
             }
         },
         clearKeyName(){
-            this.keyValue=''
+            this.keyValue='';
+            keyJson=[];
         },
         bulidKey(){
             if(keyJson.length<=1){
@@ -90,14 +91,70 @@ export default {
             for (let index = 1; index < keyJson.length; index++) {
                 create(DiyInput, {
                     name: keyJson[index].name,
-                    value: keyJson[index].value
+                    value: keyJson[index].value,
+                    index:index
                 })
             }
-
+            let keyUUID=this.getUuid();
+            keyJson.push({
+                "name":"key",
+                "value":keyUUID
+            })
+            create(DiyInput, {
+                name: "key",
+                value: keyUUID,
+                index:keyJson.length-1
+            })
         },
         //添加KEY到游戏，调用后端API
         addKey(){
-
+            let newKeyData=[];
+            for (let index = 1; index < keyJson.length; index++) {
+                let keyName=keyJson[index].name;
+                let data=document.getElementById("myInput"+index).value;
+                newKeyData.push({
+                   [keyName]:data
+                })
+            }
+            this.$createDialog({
+                type: 'confirm',
+                icon: 'cubeic-alert',
+                title: '确定要添加吗',
+                content: JSON.stringify(newKeyData),
+                confirmBtn: {
+                    text: '确定按钮',
+                    active: true,
+                    disabled: false,
+                    href: 'javascript:;'
+                },
+                cancelBtn: {
+                    text: '取消按钮',
+                    active: false,
+                    disabled: false,
+                    href: 'javascript:;'
+                },
+                onConfirm: () => {
+                    this.$createToast({
+                        type: 'warn',
+                        time: 1000,
+                        txt: '点击确认按钮'
+                    }).show()
+                },
+                onCancel: () => {
+                    this.$createToast({
+                        type: 'warn',
+                        time: 1000,
+                        txt: '点击取消按钮'
+                    }).show()
+                }
+            }).show()
+        },
+        getUuid() {
+            return 'xxxxx-xxxx-4xxx-yxxx-xxxxx'.replace(/[xy]/g, function (c) {
+                var r = (Math.random() * 16) | 0,
+                    v = c == 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
         },
         showErrorTips(text){
             this.$createToast({

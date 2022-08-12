@@ -1,7 +1,7 @@
 <template>
 <div class="newCom">
 <span>{{name}}  :  </span>
-<input type="text" placeholder="请输入字段值" v-model="value">
+<input type="text" placeholder="请输入字段值" v-model=value v-bind:id="idName">
 </div>
    
 </template>
@@ -17,6 +17,15 @@ export default {
             type:String,
             defualt:""
         },
+        index:{
+            type:Number,
+            defualt: 1
+        }
+    },
+    data(){
+        return{
+            idName:"myInput"+this.index,
+        }
     }
 }
 </script>
