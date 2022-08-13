@@ -11,9 +11,9 @@ import java.util.Date;
 
 public class JWTUtil {
     /**
-     * 过期时间：一天
+     * 过期时间：三天
      */
-    private  static final long EXPIRE=6000*60*24;
+    private  static final long EXPIRE=6000*60*24*3;
     /**
      * 加密密钥
      */
