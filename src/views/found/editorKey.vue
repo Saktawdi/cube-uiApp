@@ -28,6 +28,11 @@
                         <div class="button__horizontal"></div>
                         <div class="button__vertical"></div>
                     </button>
+                    <button class="button" v-on:click="reLoadKeyVaule">
+                        重置key值
+                        <div class="button__horizontal"></div>
+                        <div class="button__vertical"></div>
+                    </button>
                 </div>
                 <div id="builderBox" :hidden=ifBuilded>
                 </div>
@@ -36,6 +41,10 @@
                     <div class="button__horizontal"></div>
                     <div class="button__vertical"></div>
                 </button>
+                <div class="showKeysBox">
+                    <FlotBall :text="FloatIcon" @FloatBallClick="FloatBallClick"></FlotBall>
+                    <ShowKeysPopup ref="myPopup"></ShowKeysPopup>
+                </div>
             </div>
         </div>
     </div>
@@ -44,15 +53,20 @@
 <script>
 import CommonHearderVue from '@/components/CommonHearder.vue';
 import DiyInput from "./components/input.vue";
+import FlotBall from "./components/FloatBall.vue";
+import ShowKeysPopup from './components/showKeysPopup.vue';
 
 import { create } from "@/utils/create";
 
-const keyJson=[{}];
+
+var keyJson=[];
 export default {
     components: {
-        CommonHearderVue,
-        DiyInput,
-    },
+    CommonHearderVue,
+    DiyInput,
+    FlotBall,
+    ShowKeysPopup
+},
     data() {
         return {
             Info: "管理",
@@ -61,7 +75,8 @@ export default {
             readonly: true,
             placeholder:"这是示例",
             maxlength:200,
-            ifBuilded:true
+            ifBuilded:true,
+            FloatIcon:"≡",
         }
     },
     methods:{
@@ -70,7 +85,7 @@ export default {
                 this.showErrorTips("请输入要创建的字段");
             }else{
                 this.keyValue+="\""+this.nameValue+"\""+":\"\""+"\,\n";
-                keyJson.push({
+                keyJson.unshift({
                     "name":this.nameValue,
                     "value":""
                 })
@@ -79,44 +94,52 @@ export default {
         },
         clearKeyName(){
             this.keyValue='';
+            this.ifBuilded=true;
             keyJson=[];
         },
         bulidKey(){
-            if(keyJson.length<=1){
+            if(keyJson.length<1){
                 this.showErrorTips("还未添加字段!");
                 return
             }
             document.getElementById("builderBox").innerHTML = "";
+            //显示BuilderDIV盒子
             this.ifBuilded=false
-            for (let index = 1; index < keyJson.length; index++) {
+            //生成key
+            let keyUUID=this.getUuid();
+            if(keyJson[keyJson.length-1].name==="key"){
+                keyJson[keyJson.length-1].value=keyUUID;
+            }else{
+                keyJson.push({
+                    "name": "key",
+                    "value": keyUUID
+                })
+            }
+            for (let index = 0; index < keyJson.length; index++) {
                 create(DiyInput, {
                     name: keyJson[index].name,
                     value: keyJson[index].value,
                     index:index
                 })
             }
-            let keyUUID=this.getUuid();
-            keyJson.push({
-                "name":"key",
-                "value":keyUUID
-            })
-            create(DiyInput, {
-                name: "key",
-                value: keyUUID,
-                index:keyJson.length-1
-            })
+
+            // create(DiyInput, {
+            //     name: "key",
+            //     value: keyUUID,
+            //     index: keyJson.length - 1
+            // })
         },
-        //添加KEY到游戏，调用后端API
+        //前端响应式添加key，无调用API
         addKey(){
             let newKeyData=[];
-            for (let index = 1; index < keyJson.length; index++) {
+            for (let index = 0; index < keyJson.length; index++) {
                 let keyName=keyJson[index].name;
                 let data=document.getElementById("myInput"+index).value;
                 newKeyData.push({
                    [keyName]:data
                 })
             }
-            this.$createDialog({
+           this.$createDialog({
                 type: 'confirm',
                 icon: 'cubeic-alert',
                 title: '确定要添加吗',
@@ -134,20 +157,40 @@ export default {
                     href: 'javascript:;'
                 },
                 onConfirm: () => {
-                    this.$createToast({
-                        type: 'warn',
-                        time: 1000,
-                        txt: '点击确认按钮'
-                    }).show()
+                    this.onConfirmAddKey(newKeyData);
                 },
                 onCancel: () => {
                     this.$createToast({
                         type: 'warn',
                         time: 1000,
-                        txt: '点击取消按钮'
+                        txt: '取消'
                     }).show()
                 }
             }).show()
+        },
+        onConfirmAddKey(keyData){
+            this.$refs.myPopup.addKeyToswipeData(keyData)
+        },
+        reLoadKeyVaule(){
+            if(keyJson[keyJson.length - 1].name!=="key"){
+                this.showErrorTips("还未生成过模板！")
+                return
+            }
+            var newKey=this.getUuid();
+            keyJson[keyJson.length-1].value=newKey;
+            var elID="myInput"+(keyJson.length-1);
+            document.getElementById(elID).value=newKey;
+        },
+        //悬浮球
+        FloatBallClick(){
+            if(this.FloatIcon==="≡"){
+                this.FloatIcon="X"
+               this.$refs.myPopup.showPopup();
+            }else{
+                this.FloatIcon="≡"
+                this.$refs.myPopup.hidePopup();
+            }
+
         },
         getUuid() {
             return 'xxxxx-xxxx-4xxx-yxxx-xxxxx'.replace(/[xy]/g, function (c) {
@@ -171,6 +214,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
 body{
     background: #1D1F20;
 }
@@ -224,7 +269,7 @@ input {
         color:#807b79
     }
     .showJson {
-        padding:10px;
+        padding: 10px;
     }
     .btnBox{
         display:flex;

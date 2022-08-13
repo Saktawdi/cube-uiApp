@@ -19,7 +19,7 @@
 
 <script>
 import CommonHearder from '@/components/CommonHearder.vue';
-import keyList from './components/keyList.vue';
+import keyList from './components/gameList.vue';
 import {addGamesApi,getGamesApi} from "@/api/getData"
 const gamesJson=[];
 gamesJson.games=[];
@@ -41,6 +41,7 @@ export default {
         async getGames(userNum){
             try {
                 userNum=JSON.parse(userNum).num;
+
                 const result=await getGamesApi(userNum,this.getToken)
                 if (result.data.success===true) {
                     let onlineData=[];
@@ -54,7 +55,10 @@ export default {
                     this.reLoadPostJson(userNum);
                 }else if(result.data.data==="无数据"){
                     this.ifUsed=false;
+                }else if(result.data.message==="登录已过期，请重新登录"){
+                    this.showErrorTips("登录已过期，请重新登录")
                 }
+
             } catch (error) {
                 console.log(error)
                 this.showErrorTips(error)
