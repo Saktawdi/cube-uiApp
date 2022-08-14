@@ -31,7 +31,10 @@ public class InterceptorConfig  implements WebMvcConfigurer {
 
         //登录token拦截器配置
         registry.addInterceptor(loginInterceptor()).addPathPatterns("/api/v1/pri/*/*/**")
-                .excludePathPatterns("/api/v1/pri/user/login","/api/v1/pri/user/register","/swagger**/**","/api/v1/pri/admin/*");
+                .excludePathPatterns("/api/v1/pri/user/login","/api/v1/pri/user/register",
+                        "/swagger**/**",
+                        "/api/v1/pri/admin/*",
+                        "/api/v1/pri/gameKey/updataKeysApi","/api/v1/pri/gameKey/getKeys");
 
         //管理员登录token拦截器配置
         registry.addInterceptor(adminInterceptor()).addPathPatterns("/api/v1/pri/admin/*/**")

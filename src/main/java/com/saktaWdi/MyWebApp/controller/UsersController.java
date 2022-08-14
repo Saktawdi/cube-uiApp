@@ -50,7 +50,7 @@ public class UsersController {
 
     @PostMapping("login")
     public CommonResult login(@RequestBody LoginRequest loginRequest){
-        Users user=new Users();
+        Users user;
         user=userService.serleUserByNum(loginRequest.getNum());
         String pwd=loginRequest.getPwd();
         if(user==null){
