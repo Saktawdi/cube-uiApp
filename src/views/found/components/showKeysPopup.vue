@@ -15,8 +15,8 @@
                     <div class="button__horizontal"></div>
                     <div class="button__vertical"></div>
                 </button>
-                <button class="button" v-on:click="copyGameKeyUrl">
-                    复制此游戏的API到剪切板
+                <button class="button" v-on:click="showGameKeyUrl">
+                    查看此游戏的API和使用文档
                     <div class="button__horizontal"></div>
                     <div class="button__vertical"></div>
                 </button>
@@ -27,11 +27,13 @@
 
 <script>
 import KeyList from './keyList.vue';
+import {getSecretKeyApi,saveKeysApi,getKeysApi} from "@/api/getData";
 
 const positions = ['top', 'right', 'bottom', 'left', 'center']
 //用于赋值swipe，防止组件key重复
 let count = 0;
 export default {
+    components: { KeyList },
     data() {
         return {
             position: "",
@@ -39,7 +41,8 @@ export default {
             ifShow: false,
             swipeData:[],
             jsonValue:"",
-            placeholder:"尝试点击上面的key项目来进一步管理"
+            placeholder:"尝试点击上面的key项目来进查看具体字段,至于管理还未开放，未来更新",
+            secretKey:""
         };
     },
     methods: {
@@ -50,11 +53,69 @@ export default {
                 this.swipeData=this.swipeData.concat(newData);
             }
         },
-        saveKeyList(){
-
+        async getKeyList(){
+            await this.getSecretKey();
+            const res=await getKeysApi(this.secretKey,this.getToken);
+            if(res.data.success === true){
+                var rspJson=[];
+                rspJson=rspJson.concat(JSON.parse(res.data.data));
+               for (let index = 0; index < rspJson.length; index++) {
+                this.addKeyToswipeData(rspJson[index])
+               }
+            }
         },
-        copyGameKeyUrl(){
-
+        async saveKeyList(){
+            if (this.secretKey === null || this.secretKey === "") {
+                await this.getSecretKey();
+            }
+            try {
+                var postJson=[];
+                for (let index = 0; index < this.swipeData.length; index++) {
+                    postJson.push(this.swipeData[index].item.JsonData)
+                }
+                const res=await saveKeysApi(this.secretKey,postJson,this.getToken);
+                if(res.data.success === true){
+                    const toast = this.$createToast({
+                        txt: res.data.data,
+                        type: 'correct'
+                    })
+                    toast.show()
+                }else{
+                    const toast = this.$createToast({
+                        txt: res.data.data,
+                        type: 'error'
+                    })
+                    toast.show()
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getSecretKey(){
+            var userNum=JSON.parse(this.getUserInfo).num;
+            var gameName=this.$route.query.game_name
+            try {
+                await getSecretKeyApi(userNum, gameName, this.getToken).then(res => {
+                    if (res.data.success === true) {
+                        this.secretKey = res.data.data;
+                        return true;
+                    }
+            })
+            } catch (error) {
+                console.log(error)
+                return false;
+            }
+        },
+        async showGameKeyUrl(){
+            if(this.secretKey===null||this.secretKey===""){
+                await this.getSecretKey();
+            }
+            this.$router.push({
+                path: "/keysApiShow",
+                query: {
+                    secretKey: this.secretKey
+                }
+            })
         },
         showKeyJson(jsonData){
             this.jsonValue=JSON.stringify(jsonData);
@@ -91,7 +152,17 @@ export default {
             return newData;
         },
     },
-    components: { KeyList }
+    computed:{
+        getUserInfo(){
+            return this.$store.state.userInfo;
+        },
+        getToken(){
+            return this.$store.state.token;
+        }
+    },
+    mounted(){
+        this.getKeyList();
+    }
 }
 </script>
 

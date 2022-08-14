@@ -5,8 +5,9 @@ import Register from "../views/user/register.vue";
 import Home from "../views/home/home.vue";
 import Found from "../views/found/found.vue";
 import UserInfo from "../views/user/userInfo.vue";
-import GameKeySys from "@/views/found/gameKeySys.vue"
-import EditorKey from "@/views/found/editorKey.vue"
+import GameKeySys from "@/views/found/gameKeySys.vue";
+import EditorKey from "@/views/found/editorKey.vue";
+import KeysApiShow from "@/views/found/keysApiShow.vue";
 
 Vue.use(VueRouter)
 
@@ -47,6 +48,11 @@ const routes = [{
     path:"/editorKey",
     name:"EditorKey",
     component:EditorKey
+  },
+  {
+    path:"/keysApiShow",
+    name:"KeysApiShow",
+    component:KeysApiShow
   }
 ]
 

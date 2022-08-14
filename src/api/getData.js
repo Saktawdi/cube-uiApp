@@ -38,6 +38,25 @@ export const getGamesApi = (user_num,token) => axios.post("api/v1/pri/gameKey/ge
         "token":token,
     }
 })
+//获取用户密钥
+export const getSecretKeyApi = (user_num,game_name,token) => axios.post("api/v1/pri/gameKey/getSecretKey",{user_num,game_name},{
+    headers:{
+        "token":token,
+    }
+})
+//保存游戏key列表
+export const saveKeysApi = (secret_key,list_json,token) => axios.post("api/v1/pri/gameKey/saveKeys",{secret_key,list_json},{
+    headers:{
+        "token":token,
+    }
+})
+//获取key列表
+export const getKeysApi = (secret_key,token) => axios.post("api/v1/pri/gameKey/getKeys",{secret_key},{
+    headers:{
+        "token":token,
+    }
+})
+
 
 
 //查看所有报销单接口

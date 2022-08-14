@@ -41,7 +41,6 @@ export default {
         async getGames(userNum){
             try {
                 userNum=JSON.parse(userNum).num;
-
                 const result=await getGamesApi(userNum,this.getToken)
                 if (result.data.success===true) {
                     let onlineData=[];

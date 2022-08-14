@@ -10,6 +10,7 @@
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "cube-ui": "~1.12.15",
+    "marked": "^4.0.18",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
@@ -19,12 +20,16 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "github-markdown-css": "^5.1.0",
+    "highlight.js": "^11.6.0",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-cube-ui": "~0.2.5",
-    "vue-template-compiler": "^2.6.14"
+    "vue-loader": "^17.0.0",
+    "vue-markdown-loader": "^2.5.0",
+    "vue-template-compiler": "^2.7.8"
   },
   "transformModules": {
     "cube-ui": {
