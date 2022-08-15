@@ -111,7 +111,11 @@ export default {
             try {
                 addGamesApi(this.postJson, this.getToken).then(res => {
                     if (res.data.success === true) {
-                         this.showErrorTips(res.data.data)
+                        if(res.data.data===""){
+                            this.showErrorTips(res.data.message)
+                        }else{
+                             this.showErrorTips(res.data.data)
+                        }
                     } else {
                         gamesJson.games = [];
                         this.showErrorTips(res.data.message)

@@ -59,15 +59,17 @@ API:
 
 请求参数
 
-| 参数名     | 是否必须 | 参数类型 | 说明 |
-| ---------- | -------- | -------- | ---- |
-| secret_key | **是**   | String   | 密钥 |
+| 参数名     | 是否必须 | 参数类型 | 说明    |
+| ---------- | -------- | -------- | ------- |
+| secret_key | **是**   | String   | 密钥    |
+| list_json  | 是       | Sting    | kes数据 |
 
 请求实例
 
 ```js
 {
-	"secret_key":51DW51ASA1D6ASD6
+	"secret_key":51DW51ASA1D6ASD6,
+     "list_json":[{"ifUsed":"true","key":"b3e67-798a-4283-b2c1-36c7a"}]
 }
 ```
 

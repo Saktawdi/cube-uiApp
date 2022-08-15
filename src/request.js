@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const requestConfig={
-    baseURL:"http://localhost:8088/",
+    baseURL:"http://api.cnwdi.top/",
     timeout:5000
 }
 
