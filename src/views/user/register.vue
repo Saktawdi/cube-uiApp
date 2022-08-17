@@ -45,7 +45,7 @@ export default {
                 label: "账号",
                 props: {
                     placeholder: "请输入账号",
-                    type: "number"
+                    type: "number",
                 },
                 rules: {
                     required: true

@@ -32,7 +32,9 @@ export default {
         modelKey: "numValue",
         label: "账号",
         props: {
-          placeholder: "请输入账号"
+          placeholder: "请输入账号",
+          type:"number"
+
         },
         rules: {
           required: true

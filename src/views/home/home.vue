@@ -8,7 +8,7 @@
 <script>
 import CommonFooter from '@/components/CommonFooter.vue'
 import bannerList from "./components/bannerList.vue"
-import { getBannerApi } from '@/api/getData'
+import { getBannerApi} from '@/api/getData'
 import { requestConfig } from '@/request'
 
 export default {

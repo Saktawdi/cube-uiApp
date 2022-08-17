@@ -178,6 +178,9 @@ export default {
     },
     mounted(){
         //渲染完后拿数据
+        if(!this.getUserInfo){
+            this.$store.getters.getUserInfo;
+        }
         this.getGames(this.getUserInfo)
     }
 }

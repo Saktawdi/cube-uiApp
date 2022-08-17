@@ -30,7 +30,7 @@
 import CommonFooterVue from '@/components/CommonFooter.vue'
 import userMsgList from './components/userMsgList.vue'
 import defaultHeadImg from "@/assets/logo.png";
-import { getUserInfoApi } from "@/api/getData";
+import { getUserInfoApi} from "@/api/getData";
 import { requestConfig } from '@/request';
 
 export default {
