@@ -70,6 +70,7 @@ public class UsersController {
         user.setName((String) httpServletRequest.getAttribute("user_name"));
         user.setNum((Integer) httpServletRequest.getAttribute("user_num"));
         user.setVip((Integer) httpServletRequest.getAttribute("user_vip"));
+        user.setState((Integer) httpServletRequest.getAttribute("user_state"));
         user.setAvatarUrl((String) httpServletRequest.getAttribute("user_avatar_url"));
         SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
         String s = httpServletRequest.getAttribute("user_create_time").toString();

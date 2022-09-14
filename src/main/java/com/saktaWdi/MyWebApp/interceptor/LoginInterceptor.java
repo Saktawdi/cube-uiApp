@@ -31,6 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             Integer userId=(Integer) claims.get("id");
             String userName=(String) claims.get("name");;
             Integer userVip=(Integer) claims.get("vip");
+            Integer userState=(Integer) claims.get("state");
             Integer userNum=(Integer) claims.get("num");
             String userAvatarUrl=(String) claims.get("avatarUrl");
             String userCreateTime= (String)claims.get("createTime");
@@ -39,6 +40,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             request.setAttribute("user_name",userName);
             request.setAttribute("user_num",userNum);
             request.setAttribute("user_vip",userVip);
+            request.setAttribute("user_state",userState);
+
             request.setAttribute("user_avatar_url",userAvatarUrl);
             request.setAttribute("user_create_time",userCreateTime);
             return true;

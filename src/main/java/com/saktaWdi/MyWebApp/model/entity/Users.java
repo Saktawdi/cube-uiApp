@@ -18,6 +18,7 @@ public class Users {
     private String name;
     private String avatarUrl;
     private int vip;
+    private int state;
     @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
     private Date createTime;
 }

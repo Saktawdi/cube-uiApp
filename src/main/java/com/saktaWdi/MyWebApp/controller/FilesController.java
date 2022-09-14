@@ -1,19 +1,17 @@
 package com.saktaWdi.MyWebApp.controller;
 
 import com.saktaWdi.MyWebApp.utils.CommonResult;
-import com.saktaWdi.MyWebApp.utils.CommonUtils;
 import com.saktaWdi.MyWebApp.utils.FilesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.io.File;
 import java.util.UUID;
 
 @RestController
@@ -44,11 +42,17 @@ public class FilesController {
                 return CommonResult.fail("","上传图片文件名错误");
             }
             byte[] imgCompress = FilesUtils.compressPicForScale(file.getBytes(), 300, file.getOriginalFilename());
-            String resourcesRootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+
+            ApplicationHome h = new ApplicationHome(getClass());
+            File jarF = h.getSource();
+            String resourcesRootPath = jarF.getParentFile().toString()+"/logistics";
+
+
+
             String code = UUID.randomUUID().toString().replaceAll("-", "");
             String newFileName = code + fileName.substring(fileName.lastIndexOf('.'));
             String destFilePath = "userFiles/newUsers/"+newFileName;
-            String savePath=resourcesRootPath+"public/"+destFilePath;
+            String savePath=resourcesRootPath+destFilePath;
             if(FilesUtils.base64StrToImage(imgCompress,savePath)){
                 return CommonResult.ok().setResult(destFilePath);
             }else{

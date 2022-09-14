@@ -1,5 +1,4 @@
 package com.saktaWdi.MyWebApp.controller;
-
 import com.saktaWdi.MyWebApp.model.entity.Admin;
 import com.saktaWdi.MyWebApp.model.entity.Users;
 import com.saktaWdi.MyWebApp.model.request.LoginRequest;
@@ -9,12 +8,8 @@ import com.saktaWdi.MyWebApp.utils.CommonResult;
 import com.saktaWdi.MyWebApp.utils.CommonUtils;
 import com.saktaWdi.MyWebApp.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/pri/admin")
@@ -39,5 +34,34 @@ public class AdminController {
         }else{
             return CommonResult.fail("-1","未查到此管理员信息");
         }
+    }
+
+    @GetMapping("showAllUsers")
+    public CommonResult showAllUsers(){
+        List<Users> users=adminService.showAllUsers();
+        if (!users.isEmpty()){
+            return CommonResult.ok().setResult(users);
+        }else{
+            return CommonResult.fail();
+        }
+    }
+
+    @GetMapping("showAllAdmin")
+    public CommonResult showAllAdmin() {
+        List<Admin> admins=adminService.showAllAdmin();
+        if(!admins.isEmpty()){
+            return CommonResult.ok().setResult(admins);
+        }else{
+            return CommonResult.fail();
+        }
+    }
+
+    @PutMapping("addAdmin")
+    public CommonResult addAdmin(@RequestBody int num,int weight){
+        Admin admin = new Admin();
+        admin.setNum(num);
+        admin.setWeight(weight);
+        int rows = adminService.addAdmin(admin);
+        return rows == 1 ? CommonResult.ok(): CommonResult.fail();
     }
 }

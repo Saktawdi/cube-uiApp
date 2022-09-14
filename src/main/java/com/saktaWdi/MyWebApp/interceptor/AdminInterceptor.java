@@ -20,17 +20,17 @@ public class AdminInterceptor implements HandlerInterceptor {
             adminToken=request.getParameter("token");
         }
         if (StringUtils.isNotBlank(adminToken)) {
-            Claims claims = JWTUtil.checkJWT(adminToken);
+            Claims claims = JWTUtil.checkAdminJWT(adminToken);
             if (claims==null){
                 //登录过期
                 sendJsonMsg(response, CommonResult.fail("-2","登录已过期，请重新登录"));
                 return false;
             }
             Integer weight=(Integer) claims.get("weight");
-            if(weight<10){
-                sendJsonMsg(response, CommonResult.fail("-2","登录失败,非法用户"));
-                return false;
-            }
+//            if(weight<10){
+//                sendJsonMsg(response, CommonResult.fail("-2","登录失败,非法用户,权限不够"));
+//                return false;
+//            }
             request.setAttribute("admin_weight",weight);
 
             return true;

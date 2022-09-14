@@ -34,6 +34,7 @@ public class JWTUtil {
                 .claim("id",user.getId()+190306)
                 .claim("num",user.getNum())
                 .claim("vip",user.getVip())
+                .claim("state",user.getState())
                 .claim("name",user.getName())
                 .claim("avatarUrl",user.getAvatarUrl())
                 .claim("createTime",dateStr)
@@ -58,13 +59,22 @@ public class JWTUtil {
 
 
     /**
-     * 校验token
+     * 校验普通用户token
      * @param token
      * @return
      */
     public static Claims checkJWT(String token){
         try {
             Claims claim=Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token.replace(TOKEN_PREFIX,"")).getBody();
+            return claim;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    public static Claims checkAdminJWT(String token){
+        try {
+            Claims claim=Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token.replace("admin","")).getBody();
             return claim;
         }catch(Exception e){
             return null;
