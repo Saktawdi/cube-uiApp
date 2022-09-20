@@ -57,11 +57,24 @@ public class AdminController {
     }
 
     @PutMapping("addAdmin")
-    public CommonResult addAdmin(@RequestBody int num,int weight){
+    public CommonResult addAdmin(@RequestBody int num,@RequestBody int weight){
         Admin admin = new Admin();
         admin.setNum(num);
         admin.setWeight(weight);
         int rows = adminService.addAdmin(admin);
         return rows == 1 ? CommonResult.ok(): CommonResult.fail();
     }
+
+    @PostMapping("setUserState")
+    public CommonResult setUserState(@RequestBody Integer num,@RequestBody Integer status){
+        if(num == null) return CommonResult.fail().setResult("错误！没有传输用户账号");
+        Users user = userService.serleUserByNum(num);
+        if(user == null) return CommonResult.fail().setResult("操作失败，数据库中无此用户");
+        if (status == 0 || status == 1){
+            user.setState((status));
+        }
+        userService.updateUser(user);
+        return CommonResult.ok();
+    }
+
 }

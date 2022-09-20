@@ -40,4 +40,9 @@ public class UserServiceImpl implements UserService {
         int usersNum=userMapper.selectCount(queryWrapper);
         return usersNum;
     }
+
+    @Override
+    public int updateUser(Users user) {
+        return userMapper.updateById(user);
+    }
 }

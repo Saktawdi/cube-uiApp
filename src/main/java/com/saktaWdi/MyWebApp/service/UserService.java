@@ -6,4 +6,5 @@ public interface UserService {
     int insertUser(Users user);
     Users serleUserByNum(int num);
     int getMaxId();
+    int updateUser(Users user);
 }
